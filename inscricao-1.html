@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirya Academy — Ficha de Inscrição</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:  #0D2340;
+    --navy2: #1E3A5F;
+    --blue:  #2E6DA4;
+    --gold:  #E8A000;
+    --green: #1E7A4A;
+    --red:   #C0392B;
+    --bg:    #F0F4FA;
+    --card:  #FFFFFF;
+    --border:#D4E0F0;
+    --text:  #1A2A3A;
+    --muted: #6A7F96;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background: linear-gradient(135deg, #0D2340 0%, #1E3A5F 50%, #2E6DA4 100%);
+    min-height: 100vh;
+    padding: 40px 16px;
+  }
+
+  /* ── CARD ── */
+  .form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.3);
+  }
+
+  /* ── HEADER ── */
+  .form-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 70%, var(--blue) 100%);
+    padding: 36px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-header::before {
+    content:'';
+    position:absolute; top:-40px; right:-40px;
+    width:180px; height:180px; border-radius:50%;
+    background: rgba(232,160,0,.1);
+  }
+  .form-header::after {
+    content:'';
+    position:absolute; bottom:-60px; left:-20px;
+    width:150px; height:150px; border-radius:50%;
+    background: rgba(255,255,255,.04);
+  }
+  .header-logo {
+    font-family:'Playfair Display',serif;
+    font-size: 28px; color: #fff;
+    margin-bottom: 4px;
+    position: relative; z-index: 1;
+  }
+  .header-sub {
+    font-size: 11px; color: var(--gold);
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 20px;
+    position: relative; z-index: 1;
+  }
+  .header-title {
+    font-family:'Playfair Display',serif;
+    font-size: 22px; color: #fff;
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .header-desc {
+    font-size: 13px; color: rgba(255,255,255,.7);
+    line-height: 1.5;
+    position: relative; z-index: 1;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,.2);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width .4s ease;
+    width: 33%;
+  }
+
+  /* ── BODY ── */
+  .form-body { padding: 32px; }
+
+  /* ── STEPS ── */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step-title {
+    font-family:'Playfair Display',serif;
+    font-size: 20px; color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .step-desc {
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 18px;
+  }
+  .form-label {
+    font-size: 11px; font-weight: 600;
+    color: var(--navy); letter-spacing: .8px;
+    text-transform: uppercase;
+  }
+  .form-input, .form-select {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: all .2s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(46,109,164,.1);
+  }
+  .form-input.error { border-color: var(--red); }
+  .error-msg {
+    font-size: 11px; color: var(--red);
+    display: none; margin-top: 2px;
+  }
+  .error-msg.show { display: block; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* ── CURSO CARDS ── */
+  .curso-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .curso-card {
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+    background: #fff;
+  }
+  .curso-card:hover { border-color: var(--blue); background: #EEF5FB; }
+  .curso-card.selected { border-color: var(--navy); background: var(--navy); color: #fff; }
+  .curso-card .flag { font-size: 32px; margin-bottom: 8px; }
+  .curso-card .curso-name { font-weight: 600; font-size: 15px; }
+  .curso-card .curso-sub { font-size: 11px; opacity: .7; margin-top: 3px; }
+
+  /* ── NÍVEL CARDS ── */
+  .nivel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .nivel-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  .nivel-card:hover { transform: translateY(-2px); }
+  .nivel-card.selected { border-color: transparent; color: #fff; }
+  .nivel-code { font-weight: 700; font-size: 18px; }
+  .nivel-name { font-size: 10px; margin-top: 3px; opacity: .85; }
+
+  /* ── MOTIVAÇÃO ── */
+  .motiv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .motiv-card {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 500;
+  }
+  .motiv-card:hover { border-color: var(--blue); background: #EEF5FB; }
+  .motiv-card.selected { border-color: var(--gold); background: #FFF3D6; color: var(--navy); }
+  .motiv-icon { font-size: 20px; }
+
+  /* ── DISPONIBILIDADE ── */
+  .disp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .disp-btn {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+    font-size: 12px; font-weight: 500;
+    color: var(--text);
+    background: #fff;
+  }
+  .disp-btn:hover { border-color: var(--blue); }
+  .disp-btn.selected { border-color: var(--green); background: #EAF7EE; color: var(--green); }
+
+  /* ── SUMMARY ── */
+  .summary-box {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .summary-row {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-label { color: var(--muted); }
+  .summary-value { font-weight: 600; color: var(--navy); }
+
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: flex; gap: 10px;
+    margin-top: 8px;
+  }
+  .btn {
+    flex: 1; padding: 14px;
+    border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all .2s;
+  }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy2); }
+  .btn-gold { background: var(--gold); color: var(--navy); }
+  .btn-gold:hover { opacity: .9; }
+  .btn-ghost {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    flex: 0 0 auto;
+    padding: 14px 20px;
+  }
+  .btn-ghost:hover { background: var(--bg); }
+
+  /* ── STEP INDICATOR ── */
+  .step-indicator {
+    display: flex; justify-content: center;
+    gap: 8px; margin-bottom: 24px;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all .3s;
+  }
+  .step-dot.active { background: var(--navy); width: 24px; border-radius: 4px; }
+  .step-dot.done  { background: var(--green); }
+
+  /* ── SUCCESS ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 32px;
+  }
+  .success-screen.show { display: block; }
+  .success-icon { font-size: 64px; margin-bottom: 20px; }
+  .success-title {
+    font-family:'Playfair Display',serif;
+    font-size: 26px; color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .success-desc {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  .success-info {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .success-info p { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+  .success-info strong { color: var(--navy); }
+
+  /* ── FOOTER ── */
+  .form-footer {
+    background: var(--bg);
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  @media(max-width:480px) {
+    body { padding: 20px 12px; }
+    .form-body { padding: 24px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .nivel-grid { grid-template-columns: repeat(2,1fr); }
+    .motiv-grid { grid-template-columns: 1fr; }
+    .disp-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-card">
+
+  <!-- HEADER -->
+  <div class="form-header">
+    <div class="header-logo">Kirya Academy</div>
+    <div class="header-sub">Centro de Formação</div>
+    <div class="header-title">Ficha de Inscrição</div>
+    <div class="header-desc">Inglês & Francês — Formação Online — Todos os Níveis</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+
+  <!-- FORM BODY -->
+  <div class="form-body" id="form-body">
+
+    <!-- Step indicators -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+
+    <!-- ── PASSO 1: Dados Pessoais ── -->
+    <div class="step active" id="step-1">
+      <div class="step-title">Dados Pessoais</div>
+      <div class="step-desc">Preenche os teus dados para começarmos a tua inscrição.</div>
+
+      <div class="form-group">
+        <label class="form-label">Nome Completo *</label>
+        <input class="form-input" id="f-nome" placeholder="O teu nome completo">
+        <span class="error-msg" id="err-nome">Por favor preenche o teu nome.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Data de Nascimento *</label>
+          <input class="form-input" type="date" id="f-nasc">
+          <span class="error-msg" id="err-nasc">Campo obrigatório.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Género</label>
+          <select class="form-select" id="f-genero">
+            <option value="">Selecionar...</option>
+            <option>Masculino</option>
+            <option>Feminino</option>
+            <option>Prefiro não dizer</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email *</label>
+        <input class="form-input" type="email" id="f-email" placeholder="o.teu@email.com">
+        <span class="error-msg" id="err-email">Por favor insere um email válido.</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Telefone / WhatsApp *</label>
+        <input class="form-input" type="tel" id="f-tel" placeholder="+244 9XX XXX XXX">
+        <span class="error-msg" id="err-tel">Por favor insere o teu telefone.</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">País / Cidade</label>
+        <input class="form-input" id="f-local" placeholder="Ex: Angola — Luanda">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="nextStep(1)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── PASSO 2: Curso e Nível ── -->
+    <div class="step" id="step-2">
+      <div class="step-title">Curso & Nível</div>
+      <div class="step-desc">Escolhe o curso e o nível que pretendes iniciar.</div>
+
+      <!-- Curso -->
+      <div class="form-label" style="display:block;margin-bottom:10px">Curso *</div>
+      <div class="curso-grid">
+        <div class="curso-card" id="curso-en" onclick="selectCurso('Inglês','curso-en')">
+          <div class="flag">🇬🇧</div>
+          <div class="curso-name">Inglês</div>
+          <div class="curso-sub">English Course</div>
+        </div>
+        <div class="curso-card" id="curso-fr" onclick="selectCurso('Francês','curso-fr')">
+          <div class="flag">🇫🇷</div>
+          <div class="curso-name">Francês</div>
+          <div class="curso-sub">Cours de Français</div>
+        </div>
+      </div>
+      <span class="error-msg" id="err-curso">Por favor seleciona um curso.</span>
+
+      <!-- Nível -->
+      <div class="form-label" style="display:block;margin-bottom:10px;margin-top:8px">Nível *</div>
+      <div class="nivel-grid">
+        <div class="nivel-card" id="niv-A1" onclick="selectNivel('A1','Iniciante','#1E7A4A','niv-A1')">
+          <div class="nivel-code">A1</div>
+          <div class="nivel-name">Iniciante</div>
+        </div>
+        <div class="nivel-card" id="niv-A2" onclick="selectNivel('A2','Elementar','#27AE60','niv-A2')">
+          <div class="nivel-code">A2</div>
+          <div class="nivel-name">Elementar</div>
+        </div>
+        <div class="nivel-card" id="niv-B1" onclick="selectNivel('B1','Intermédio','#2E6DA4','niv-B1')">
+          <div class="nivel-code">B1</div>
+          <div class="nivel-name">Intermédio</div>
+        </div>
+        <div class="nivel-card" id="niv-B2" onclick="selectNivel('B2','Interm. Avançado','#1E3A5F','niv-B2')">
+          <div class="nivel-code">B2</div>
+          <div class="nivel-name">Interm. Avançado</div>
+        </div>
+        <div class="nivel-card" id="niv-C1" onclick="selectNivel('C1','Avançado','#E8A000','niv-C1')">
+          <div class="nivel-code">C1</div>
+          <div class="nivel-name">Avançado</div>
+        </div>
+        <div class="nivel-card" id="niv-C2" onclick="selectNivel('C2','Mestria','#C0392B','niv-C2')">
+          <div class="nivel-code">C2</div>
+          <div class="nivel-name">Mestria</div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:4px">
+        <label class="form-label">Não sabes o teu nível?</label>
+        <select class="form-select" id="f-teste">
+          <option value="">Selecionar...</option>
+          <option>Sim, gostaria de fazer um teste de nível</option>
+          <option>Não, já sei o meu nível</option>
+        </select>
+      </div>
+      <span class="error-msg" id="err-nivel">Por favor seleciona um nível.</span>
+
+      <!-- Motivação -->
+      <div class="form-label" style="display:block;margin-bottom:10px;margin-top:8px">Motivação</div>
+      <div class="motiv-grid" id="motiv-grid">
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">💼</span>Profissional</div>
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">🎓</span>Académico</div>
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">✈️</span>Viagens</div>
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">❤️</span>Interesse Pessoal</div>
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">📜</span>Certificação</div>
+        <div class="motiv-card" onclick="toggleMotiv(this)"><span class="motiv-icon">🌍</span>Emigração</div>
+      </div>
+
+      <!-- Disponibilidade -->
+      <div class="form-label" style="display:block;margin-bottom:10px">Disponibilidade Horária</div>
+      <div class="disp-grid">
+        <div class="disp-btn" onclick="toggleDisp(this)">🌅 Manhã</div>
+        <div class="disp-btn" onclick="toggleDisp(this)">☀️ Tarde</div>
+        <div class="disp-btn" onclick="toggleDisp(this)">🌙 Noite</div>
+        <div class="disp-btn" onclick="toggleDisp(this)">📅 Semana</div>
+        <div class="disp-btn" onclick="toggleDisp(this)">🗓️ Fim de Semana</div>
+        <div class="disp-btn" onclick="toggleDisp(this)">🔄 Flexível</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="prevStep(2)">←</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ── PASSO 3: Resumo e Confirmação ── -->
+    <div class="step" id="step-3">
+      <div class="step-title">Confirmar Inscrição</div>
+      <div class="step-desc">Verifica os teus dados antes de submeter.</div>
+
+      <div class="summary-box" id="summary">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mensagem / Observações (opcional)</label>
+        <textarea class="form-input" id="f-obs" rows="3"
+          placeholder="Alguma informação adicional que queiras partilhar..."
+          style="resize:vertical"></textarea>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:20px">
+        <input type="checkbox" id="f-terms" style="margin-top:3px;width:16px;height:16px;cursor:pointer">
+        <label for="f-terms" style="font-size:13px;color:var(--muted);cursor:pointer;line-height:1.5">
+          Aceito que os meus dados sejam utilizados pela <strong>Kirya Academy</strong>
+          para fins de formação e contacto.
+        </label>
+      </div>
+      <span class="error-msg" id="err-terms">Por favor aceita os termos para continuar.</span>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="prevStep(3)">←</button>
+        <button class="btn btn-gold" onclick="submitForm()">🎓 Submeter Inscrição</button>
+      </div>
+    </div>
+
+  </div><!-- /form-body -->
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Inscrição Recebida!</div>
+    <div class="success-desc">
+      Obrigado pela tua inscrição na <strong>Kirya Academy</strong>.<br>
+      A nossa equipa irá contactar-te em breve.
+    </div>
+    <div class="success-info" id="success-info"></div>
+    <div style="background:#EAF7EE;border-radius:12px;padding:16px;margin-bottom:20px;text-align:left">
+      <p style="font-size:13px;color:#1E7A4A;font-weight:600;margin-bottom:4px">✅ O que acontece a seguir?</p>
+      <p style="font-size:13px;color:#4A4A4A;line-height:1.6">
+        1. Receberás um email de confirmação<br>
+        2. A nossa equipa entrará em contacto em 24–48h<br>
+        3. Será marcada a tua sessão de boas-vindas
+      </p>
+    </div>
+    <p style="font-size:13px;color:var(--muted)">
+      Dúvidas? Contacta-nos pelo WhatsApp ou email.
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="form-footer">
+    🔒 Os teus dados estão seguros — Kirya Academy © 2026
+  </div>
+
+</div><!-- /form-card -->
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbwTLMIOlKtlPhhzuK7yH5Q8ID_tQ13R90RjQpLyvotDj7YHyK1s3UZTPevdSpq1XZjyJA/exec";
+const ADMIN_EMAIL = "carvmendes2@gmail.com";
+
+let curStep = 1;
+let selectedCurso = '';
+let selectedNivel = '';
+let selectedNivelName = '';
+let selectedMotivs = [];
+let selectedDisps = [];
+
+// ── NAVIGATION ────────────────────────────────────────────────────────
+function nextStep(from) {
+  if (!validateStep(from)) return;
+  curStep = from + 1;
+  updateUI();
+}
+
+function prevStep(from) {
+  curStep = from - 1;
+  updateUI();
+}
+
+function updateUI() {
+  // Steps
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step-${curStep}`).classList.add('active');
+  // Dots
+  for (let i=1; i<=3; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'step-dot';
+    if (i < curStep) dot.classList.add('done');
+    else if (i === curStep) dot.classList.add('active');
+  }
+  // Progress
+  const pct = {1:33, 2:66, 3:100};
+  document.getElementById('progress').style.width = pct[curStep] + '%';
+  // Summary
+  if (curStep === 3) buildSummary();
+  window.scrollTo(0,0);
+}
+
+// ── VALIDATION ────────────────────────────────────────────────────────
+function validateStep(step) {
+  let ok = true;
+  if (step === 1) {
+    const nome  = document.getElementById('f-nome').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const tel   = document.getElementById('f-tel').value.trim();
+    const nasc  = document.getElementById('f-nasc').value;
+    showErr('err-nome',  !nome);
+    showErr('err-email', !email || !email.includes('@'));
+    showErr('err-tel',   !tel);
+    showErr('err-nasc',  !nasc);
+    if (!nome || !email || !email.includes('@') || !tel || !nasc) ok = false;
+  }
+  if (step === 2) {
+    showErr('err-curso', !selectedCurso);
+    showErr('err-nivel', !selectedNivel);
+    if (!selectedCurso || !selectedNivel) ok = false;
+  }
+  return ok;
+}
+
+function showErr(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show', show);
+}
+
+// ── SELECTIONS ────────────────────────────────────────────────────────
+function selectCurso(curso, id) {
+  selectedCurso = curso;
+  document.querySelectorAll('.curso-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(id).classList.add('selected');
+  showErr('err-curso', false);
+}
+
+function selectNivel(code, name, color, id) {
+  selectedNivel = code;
+  selectedNivelName = name;
+  document.querySelectorAll('.nivel-card').forEach(c => {
+    c.classList.remove('selected');
+    c.style.background = '';
+    c.style.color = '';
+  });
+  const card = document.getElementById(id);
+  card.classList.add('selected');
+  card.style.background = color;
+  showErr('err-nivel', false);
+}
+
+function toggleMotiv(el) {
+  el.classList.toggle('selected');
+  const txt = el.querySelector('span + *') ?
+    el.textContent.trim() : el.innerText.replace(/./u,'').trim();
+  const label = el.innerText.trim().replace(/^./u,'').trim();
+  if (el.classList.contains('selected')) {
+    if (!selectedMotivs.includes(label)) selectedMotivs.push(label);
+  } else {
+    selectedMotivs = selectedMotivs.filter(m => m !== label);
+  }
+}
+
+function toggleDisp(el) {
+  el.classList.toggle('selected');
+  const label = el.innerText.trim().replace(/^./u,'').trim();
+  if (el.classList.contains('selected')) {
+    if (!selectedDisps.includes(label)) selectedDisps.push(label);
+  } else {
+    selectedDisps = selectedDisps.filter(d => d !== label);
+  }
+}
+
+// ── SUMMARY ───────────────────────────────────────────────────────────
+function buildSummary() {
+  const rows = [
+    ['Nome',         document.getElementById('f-nome').value],
+    ['Email',        document.getElementById('f-email').value],
+    ['Telefone',     document.getElementById('f-tel').value],
+    ['País / Cidade',document.getElementById('f-local').value || '—'],
+    ['Curso',        selectedCurso],
+    ['Nível',        `${selectedNivel} — ${selectedNivelName}`],
+    ['Motivação',    selectedMotivs.join(', ') || '—'],
+    ['Disponibilidade', selectedDisps.join(', ') || '—'],
+  ];
+  document.getElementById('summary').innerHTML = rows.map(([l,v]) => `
+    <div class="summary-row">
+      <span class="summary-label">${l}</span>
+      <span class="summary-value">${v}</span>
+    </div>`).join('');
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────
+async function submitForm() {
+  const terms = document.getElementById('f-terms').checked;
+  showErr('err-terms', !terms);
+  if (!terms) return;
+
+  const data = {
+    action:       'addInscricao',
+    nome:         document.getElementById('f-nome').value.trim(),
+    nasc:         document.getElementById('f-nasc').value,
+    genero:       document.getElementById('f-genero').value,
+    email:        document.getElementById('f-email').value.trim(),
+    tel:          document.getElementById('f-tel').value.trim(),
+    local:        document.getElementById('f-local').value.trim(),
+    curso:        selectedCurso,
+    nivel:        `${selectedNivel} — ${selectedNivelName}`,
+    teste:        document.getElementById('f-teste').value,
+    motivacao:    selectedMotivs.join(', '),
+    disponib:     selectedDisps.join(', '),
+    obs:          document.getElementById('f-obs').value.trim(),
+    data:         new Date().toLocaleDateString('pt-PT'),
+    estado:       'Pendente',
+  };
+
+  // Show success immediately
+  document.getElementById('form-body').style.display = 'none';
+  document.getElementById('success-screen').classList.add('show');
+  document.getElementById('success-info').innerHTML = `
+    <p>👤 <strong>Nome:</strong> ${data.nome}</p>
+    <p>📧 <strong>Email:</strong> ${data.email}</p>
+    <p>📱 <strong>Telefone:</strong> ${data.tel}</p>
+    <p>🎓 <strong>Curso:</strong> ${data.curso} — ${data.nivel}</p>
+  `;
+
+  // Send to Sheets + email
+  try {
+    const payload = encodeURIComponent(JSON.stringify(data));
+    await fetch(`${API}?action=addInscricao&data=${payload}`);
+  } catch(e) {
+    console.log('Offline — saved locally');
+    localStorage.setItem(`ka_inscricao_${Date.now()}`, JSON.stringify(data));
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+// Set max date for birth (must be at least 10 years old)
+const maxDate = new Date();
+maxDate.setFullYear(maxDate.getFullYear() - 10);
+document.getElementById('f-nasc').max = maxDate.toISOString().split('T')[0];
+</script>
+</body>
+</html>
